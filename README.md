@@ -5,7 +5,7 @@
 
 * React Js + Semantic UI
 
-* MongoDB
+* MongoDB + Mongoose
 
 ### Local Environment Setup
 * Use Node Version: 10.x.x
