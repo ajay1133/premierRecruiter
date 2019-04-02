@@ -22,9 +22,7 @@ class App extends Component {
   render () {
     const { history, isShow = true, user } = this.props;
     const { animation, dimmed, direction, visible } = this.state;
-    
-    const isValidUserFlag = validObjectWithParameterKeys(user, ['id', 'role']);
-    
+    const isValidUserFlag = validObjectWithParameterKeys(user, ['_id', 'role']);
     return (
       <div className="full-height">
         <Button className="hide" onClick={this.handleAnimationChange('push')}>Push</Button>

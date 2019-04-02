@@ -3,7 +3,13 @@ import store from 'store2';
 import { push } from 'react-router-redux';
 import { flush as flushAccount } from './account';
 import { flush as flushContact } from './contact';
-import { validObjectWithParameterKeys, typeCastToString } from '../../utils/commonutils';
+import { 
+  validObjectWithParameterKeys, 
+  typeCastToString 
+} from '../../utils/commonutils';
+import {
+	DEFAULT_MILLISECONDS_TO_SHOW_MESSAGES
+} from '../../utils/constants';
 
 // Action creators
 // Loading
@@ -22,6 +28,7 @@ const SIGNUP = 'auth/SIGNUP';
 const SIGNUP_SUCCESS = 'auth/SIGNUP_SUCCESS';
 const SIGNUP_FAIL = 'auth/SIGNUP_FAIL';
 // Reset reducer
+const RESET_MESSAGE = 'auth/RESET_MESSAGE';
 const FLUSH = 'auth/FLUSH';
 
 const initialState = Immutable.fromJS({
@@ -32,8 +39,10 @@ const initialState = Immutable.fromJS({
   loginMsg: null,
   user: null,
   loading: false,
-  signupError: null
+  signUpErr: null
 });
+
+const internals = {};
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -47,7 +56,7 @@ export default function reducer(state = initialState, action) {
         .set('isLoad', false)
         .set(
           'user', 
-          validObjectWithParameterKeys(action.user, ['id']) &&
+          validObjectWithParameterKeys(action.user, ['_id']) &&
           action.user
         );
     case LOAD_FAIL:
@@ -58,7 +67,7 @@ export default function reducer(state = initialState, action) {
 					(
 						validObjectWithParameterKeys(action, ['error']) && 
 						typeCastToString(action.error)
-					) || state.loadErr
+					) || null
 				)
         .set('user', null);
     // Forgot password
@@ -70,7 +79,7 @@ export default function reducer(state = initialState, action) {
 					(
 						validObjectWithParameterKeys(action, ['message']) && 
 						typeCastToString(action.message)
-					) || state.loginMsg
+					) || null
 				)
         .set('user', null);
     case FORGOT_PASSWORD_FAIL:
@@ -81,7 +90,7 @@ export default function reducer(state = initialState, action) {
 					(
 						validObjectWithParameterKeys(action, ['error']) && 
 						typeCastToString(action.error)
-					) || state.loginErr
+					) || null
 				)
         .set('loginMsg', null)
         .set('user', null);    
@@ -95,7 +104,7 @@ export default function reducer(state = initialState, action) {
         .set('isLogin', false)
         .set(
           'user', 
-          validObjectWithParameterKeys(action.user, ['id']) &&
+          validObjectWithParameterKeys(action.user, ['_id']) &&
           action.user
         );
     case LOGIN_FAIL:
@@ -106,38 +115,42 @@ export default function reducer(state = initialState, action) {
           (
             validObjectWithParameterKeys(action, ['error']) && 
             typeCastToString(action.error)
-          ) || state.loginErr
+          ) || null
         )
         .set('user', null);    
     // SignUp
     case SIGNUP:
       return state
         .set('loading', true)
-        .set('signupError', null);
+        .set('signUpErr', null);
     case SIGNUP_SUCCESS:
       return state
         .set('loading', false)
-        .set('signupError', null)
+        .set('signUpErr', null)
         .set(
           'user', 
-          validObjectWithParameterKeys(action.user, ['id']) &&
+          validObjectWithParameterKeys(action.user, ['_id']) &&
           action.user
         );
     case SIGNUP_FAIL:
       return state
         .set('loading', false)
         .set(
-          'signupError', 
+          'signUpErr', 
           (
             validObjectWithParameterKeys(action, ['error']) && 
             typeCastToString(action.error)
-          ) || state.signupError
+          ) || null
         )
         .set('user', null);
-    // Reset reducer
-    case FLUSH: {
+    // Reset reducer		
+    case RESET_MESSAGE:
+		  return state
+			  .set('loginMsg', null)
+			  .set('loginErr', null)
+			  .set('signUpErr', null);
+    case FLUSH:
       return initialState;
-    }
     // Default
     default:
       return state;
@@ -158,7 +171,7 @@ export const load = forced => async (dispatch, getState, api) => {
   // Start loading
   dispatch({ type: LOAD });
   try {
-    // Ca;ll api to fetch user data
+    // Call api to fetch user data
     const res = await api.get('/sessions');
     // If an error occurs
     if (validObjectWithParameterKeys(res, ['message'])) {
@@ -166,6 +179,7 @@ export const load = forced => async (dispatch, getState, api) => {
         type: LOAD_FAIL, 
         error: typeCastToString(res.message) 
       });
+      dispatch(internals.resetMessage());
       return;
     }
     if (validObjectWithParameterKeys(res, ['accessToken'])) {
@@ -179,8 +193,12 @@ export const load = forced => async (dispatch, getState, api) => {
     // If an error occurs, set error field
     dispatch({ 
 			type: LOAD_FAIL, 
-			error: (validObjectWithParameterKeys(err, ['message']) && typeCastToString(err.message)) || typeCastToString(err) 
-		});
+			error: (
+        validObjectWithParameterKeys(err, ['message']) && 
+        typeCastToString(err.message)
+      ) || typeCastToString(err) 
+    });
+    dispatch(internals.resetMessage());
   }
 };
 
@@ -213,6 +231,7 @@ export const login = data => async (dispatch, getState, api) => {
         err.response.data.message
       ) || 'System Error'
     });
+    dispatch(internals.resetMessage());
   }
 };
 
@@ -231,14 +250,18 @@ export const forgotPassword = email => async (dispatch, getState, api) => {
         type: FORGOT_PASSWORD_SUCCESS, 
         message: typeCastToString(res.message) 
       });
-      return res;
+      dispatch(internals.resetMessage());
     }
   } catch (err) {
     // If an error occurs, set error field
     dispatch({ 
 			type: FORGOT_PASSWORD_FAIL, 
-			error: (validObjectWithParameterKeys(err, ['message']) && typeCastToString(err.message)) || typeCastToString(err) 
-		});
+			error: (
+        validObjectWithParameterKeys(err, ['message']) && 
+        typeCastToString(err.message)
+      ) || typeCastToString(err) 
+    });
+    dispatch(internals.resetMessage());
   }
 };
 
@@ -275,4 +298,13 @@ export const logout = () => async (dispatch) => {
   await dispatch(flushContact());
   // Redirect user
   dispatch(push('/'));
+};
+
+/**
+ * To reset message fields in reducer
+ */
+internals.resetMessage = (defaultTimeout = DEFAULT_MILLISECONDS_TO_SHOW_MESSAGES) => {
+	return dispatch => setTimeout(() => {
+		dispatch({ type: RESET_MESSAGE });
+	}, defaultTimeout || DEFAULT_MILLISECONDS_TO_SHOW_MESSAGES);
 };

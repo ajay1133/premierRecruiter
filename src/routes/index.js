@@ -44,8 +44,7 @@ const Confirmation = Loadable({
 class MainRoute extends React.Component {
   render () {
     const { history, user } = this.props;
-    const isUserLoggedInFlag = validObjectWithParameterKeys(user, ['id', 'role']);
-    
+    const isUserLoggedInFlag = validObjectWithParameterKeys(user, ['_id', 'role']);
     const switchRoutesACL = (
         <Switch>
             {
@@ -82,7 +81,6 @@ class MainRoute extends React.Component {
             }
         </Switch>
     );
-    
     return (
       <ConnectedRouter history={ history }>
         <div>

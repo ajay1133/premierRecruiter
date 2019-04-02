@@ -9,7 +9,6 @@ class AuthenticatedUser extends Component {
     children: PropTypes.node,
     user: PropTypes.object
   }
-
   static defaultProps = {
     location: {},
     children: null,
@@ -17,7 +16,7 @@ class AuthenticatedUser extends Component {
   }
   render() {    
     const { children, location, user } = this.props;
-    if (user && user.id) {
+    if (user && user._id) {
         return children;
     } else {
         return <Redirect to={{

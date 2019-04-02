@@ -19,9 +19,9 @@ exports.createUser = async userPayload => {
 	  assert(userPayload, i18n('services.accountService.missingUserPayload'));
     const userData = Object.assign({}, userPayload);
     // Delete password from userData object
-	  delete userData.password;
+    delete userData.password;
     // Search for existing user with same email
-    const existingUser = await users.findOne({ where: { email: userPayload.email }});
+    const existingUser = await users.findOne({ email: userPayload.email });
     // Exit with error code if same user is found
     if (existingUser) {
       return i18n('services.accountService.emailExists');
@@ -65,9 +65,9 @@ exports.getAllAccounts = async query => {
   limit = (limit && parseInt(limit)) || 0;
   offset *= limit;
   if (!order) {
-    order = JSON.stringify([['id', 'ASC']]);
+    order = JSON.stringify([['_id', 'ASC']]);
   }
-	return await users.findAndCountAll({
+	/*return await users.findAndCountAll({
 	  attributes: constants.DEFAULT_USER_ATTRIBUTES,
     include: finalInclude,
     where: {        
@@ -77,7 +77,7 @@ exports.getAllAccounts = async query => {
     offset,
     limit,
     order: JSON.parse(order)
-  });
+  });*/
 };
 
 /**
@@ -85,18 +85,21 @@ exports.getAllAccounts = async query => {
  * @param userId
  */
 exports.getUser = async userId => {
-  try {
-    let userDetails = await users.findOne({
-      attributes: constants.DEFAULT_USER_ATTRIBUTES,
-      where: { id: userId }
-    });
-    if (userDetails) {
-      return userDetails.toJSON();
-    } else {
-      return Boom.internal('User Not Found');
+  if (userId) {
+    try {
+      let userDetails = await users
+        .findOne({ _id: userId })
+        .select(constants.DEFAULT_USER_ATTRIBUTES);
+      if (userDetails) {
+        return userDetails.toJSON();
+      } else {
+        return Boom.internal('User Not Found');
+      }
+    } catch(err) {
+      return err;
     }
-  } catch(err) {
-    return err;
+  } else {
+    return Boom.internal('User Not Found');
   }
 };
 
@@ -107,7 +110,7 @@ exports.getUser = async userId => {
 exports.getUserByEmail = async email => {
 	try {
 		let userDetails = await users.findOne({
-			where: { email }
+			email
 		});
 		if (userDetails) {
 			return userDetails.toJSON();

@@ -55,6 +55,8 @@
     "lodash": "^4.17.10",
     "markdown-it": "^8.4.2",
     "moment": "^2.22.2",
+    "mongoose": "^5.4.20",
+    "mongoose-model-cli": "^1.4.0",
     "mysql2": "^1.6.1",
     "node-uuid": "^1.4.8",
     "nodemailer": "^4.6.8",
@@ -92,8 +94,6 @@
     "resolve": "1.6.0",
     "semantic-ui-css": "^2.3.3",
     "semantic-ui-react": "^0.82.2",
-    "sequelize": "^4.38.0",
-    "sequelize-cli": "^5.2.0",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
     "socket.io-redis": "^5.2.0",
@@ -113,9 +113,7 @@
     "yar": "^9.0.1"
   },
   "scripts": {
-    "db": "sequelize db:create && sequelize db:migrate && sequelize db:seed:all",
-    "migrate": "sequelize db:migrate",
-    "seedAll": "sequelize db:seed:all",
+    "db": "mongoose seed",
     "dev-api": "nodemon --exec node api",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",

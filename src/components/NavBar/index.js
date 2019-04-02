@@ -38,15 +38,12 @@ class NavBar extends Component {
   
   render() {
     const { user, isShow, location } = this.props;
-    
 	  const validUserNameFlag = validObjectWithParameterKeys(user, ['firstName', 'lastName']) && (!!user.firstName ||
       !!user.lastName);
 	  const currentLocation = location && strictValidObjectWithKeys(location.toJSON()) && location.toJSON().pathname;
-	  
-	  if (!(validObjectWithParameterKeys(user, ['id', 'role']) && isShow)) {
+	  if (!(validObjectWithParameterKeys(user, ['_id', 'role']) && isShow)) {
 	    return null;
     }
-	
 	  return (
       <div className="topNavbar">
         <div className="col-8">

@@ -117,7 +117,6 @@ a, i {
 .ui.large.input{
 	width:100% !important;
 }
-
 .ui.bg-primary{
 	background-color: #2d62c7;
 	color: #fff;
@@ -161,7 +160,7 @@ a, i {
 }
 .pushable .ui.thin.left.sidebar, .ui.thin.right.sidebar {
 	width: 300px;
-	background: linear-gradient(205deg, #3D74FF 0%, #0142E5 100%);
+	background: linear-gradient(205deg, transparent 0%, transparent 100%);
 }
 .pushable .ui.visible.thin.left.sidebar ~ .pusher{
 	-webkit-transform: translate3d(150px, 0, 0);
@@ -338,8 +337,6 @@ span.statusPending, .statusDenied, .statusActive {
 }
 .ui.segment .fields .ui.button {
 	background: #e0e1e240 none;
-
-
 }
 .ui.form .field > label {
 	background: #32323214;
@@ -378,6 +375,9 @@ span.statusPending, .statusDenied, .statusActive {
 }
 .radioBtn {
 	margin-right: 30px;
+}
+.ui.inverted.icon.menu .item{
+	color: #000000 !important;
 }
 @media only screen and (max-width: 767px) {
 	.blueBg {

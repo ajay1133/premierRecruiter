@@ -9,13 +9,9 @@ module.exports = {
       payloadType: 'form',
     },
   },
-
   tags: ['api', 'session'],
-
   description: 'Create session either via token or by email/password',
-
   notes: 'User login through token generation or input email/password',
-
   validate: {
     query: {
       jwt: joi.number()
@@ -23,7 +19,6 @@ module.exports = {
               .default(0)
               .description('set 1 to get jwt token'),
     },
-    
     payload: {
 	    token: joi.string()
 	              .optional(),
@@ -34,17 +29,13 @@ module.exports = {
                    .optional()
                    .allow(['', null])
     },
-    
     options: { abortEarly: false },
   },
-
   handler: async (request, h) => {
     const { token, email, password } = request.payload;
-    
-    const onError = (err) => {
+    const onError = err => {
       throw boom.badRequest(err);
     };
-	
 	  let user = {};
     try {
 	    if (token) {
@@ -53,17 +44,14 @@ module.exports = {
       } else if (email && password) {
 	      user = await sessionService.authenticate(email, password);
       }
-      if (user && user.id) {
-        let scope = ['user'];
-        
+      if (user) {
+        let scope = ['user'];  
         if (user.role === 1) {
           scope.push('admin');
         } else {
           scope.push('customer');
         }
-        
         user.scope = scope;
-        
         if (request.query.jwt) {
           try {
             let accessToken =  await jwtHelper.sign(user);

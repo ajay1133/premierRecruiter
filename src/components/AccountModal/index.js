@@ -35,7 +35,7 @@ export default class AccountModal extends Component {
     const accountData = formData.toJS();
     this.setState({ loading: true });
     await account(accountData);
-    if (!validObjectWithParameterKeys(selectedUser, ['id'])) {
+    if (!validObjectWithParameterKeys(selectedUser, ['_id'])) {
       await dispatch(reset('accountForm'));
     }
 	  this.setState({ loading: false });
@@ -88,7 +88,7 @@ export default class AccountModal extends Component {
           placeholder="Email"
           component={TextBox}
           validate={email}
-          readOnly={validObjectWithParameterKeys(selectedUser, ['id'])}
+          readOnly={validObjectWithParameterKeys(selectedUser, ['_id'])}
         />
         <Field
           name="address"
@@ -135,10 +135,10 @@ export default class AccountModal extends Component {
           disabled={submitting}
           loading={submitting}
         >
-          { validObjectWithParameterKeys(selectedUser, ['id']) ? 'Save Profile' : 'Add Profile' }
+          { validObjectWithParameterKeys(selectedUser, ['_id']) ? 'Save Profile' : 'Add Profile' }
         </Button>
         {
-	        validObjectWithParameterKeys(selectedUser, ['id']) &&
+	        validObjectWithParameterKeys(selectedUser, ['_id']) &&
           <Button
             type="button"
             primary

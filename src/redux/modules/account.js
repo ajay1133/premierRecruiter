@@ -227,7 +227,7 @@ export const saveAccount = accountDetails => async (dispatch, getState, api) => 
 		// Insert in db using post api
 		const res = await api.post('/account', { data: accountDetails });
     // If result is valid
-    if (validObjectWithParameterKeys(res, ['id', 'status'])) {
+    if (validObjectWithParameterKeys(res, ['_id', 'status'])) {
 			await dispatch(loadAccounts());
 	    await dispatch({ type: LOAD_SUCCESS, message: 'Added Successfully' });
 	    dispatch(internals.resetMessage());
@@ -260,18 +260,18 @@ export const updateAccount = accountDetails => async (dispatch, getState, api) =
 		// If user is deleted, remove user
 		// Else overWrite user object with the accountDetails object
     if (!accountDetails.status) {
-    	users = users.filter(user => user.id !== id);
-	    selectedUser = strictValidArrayWithLength(users.filter(user => user.id === id)) &&
-		    users.filter(user => user.id === id)[0];
+    	users = users.filter(user => user._id !== id);
+	    selectedUser = strictValidArrayWithLength(users.filter(user => user._id === id)) &&
+		    users.filter(user => user._id === id)[0];
     } else {
       users = users.map((user) => {
-        if (user.id === id) {
+        if (user._id === id) {
           Object.assign(user, accountDetails);
         }
         return user;
       });
-      selectedUser = strictValidArrayWithLength(users.filter(user => user.id === id)) &&
-	      users.filter(user => user.id === id)[0];
+      selectedUser = strictValidArrayWithLength(users.filter(user => user._id === id)) &&
+	      users.filter(user => user._id === id)[0];
 		}
 		// Update user in database by calling put api
     await api.put(`/account/${id}`, { data: accountDetails });

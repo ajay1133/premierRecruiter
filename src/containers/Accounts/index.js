@@ -86,7 +86,7 @@ export default class Accounts extends Component {
   handleConfirm = async () => {
     const { selectedUser, type } = this.state;
     const { dispatch } = this.props;
-    let accountDetails = { id: selectedUser.id };
+    let accountDetails = { id: selectedUser._id };
     if (type === 'delete') {
       accountDetails.isDeleted = true;
     } else if (type === 'active'){
@@ -277,7 +277,7 @@ export default class Accounts extends Component {
 						          strictValidArrayWithLength(items) &&
 						          items.map(user => (
                         <TableRow
-                          key={user.id}
+                          key={user._id}
                           row={user}
                           editAccount={this.editAccount}
                           typeAction={this.typeAction}

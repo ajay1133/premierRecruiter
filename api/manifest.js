@@ -34,7 +34,7 @@ module.exports = {
               title: `${rootPackage.name} Documentation`,
               version: rootPackage.version,
               contact: {
-                name: 'Simsaw',
+                name: 'Closeloop',
                 email: 'info@premier-recruiter.com',
               },
             },

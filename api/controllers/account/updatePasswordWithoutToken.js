@@ -35,7 +35,7 @@ module.exports = {
 	  // If user is authenticated update user password 
 	  try {
 	    const user = await sessionService.authenticate(email, currentPassword);
-	    if (user && user.id) {
+	    if (user && user._id) {
 		    let result = await accountService.updatePassword({
 			    email,
 			    password: newPassword

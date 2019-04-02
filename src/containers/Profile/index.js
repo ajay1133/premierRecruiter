@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import queryString from 'querystring';
 import { Field, reduxForm, formValueSelector, SubmissionError } from 'redux-form/immutable';
-import { Grid, Message, Loader, Header, Button, Form } from  'semantic-ui-react';
+import { Grid, Message, Loader, Header, Button, Form, GridColumn } from  'semantic-ui-react';
 import { TextBox, TextArea, CheckBox, DropDown } from '../../components/Form';
 import { required, email, normalizePhone, url, passwordValidator, isValidZip } from '../../utils/validations';
 import {
@@ -259,7 +259,7 @@ export default class Profile extends Component {
   	const descContent = (
 			<Grid>
 				<Grid.Row >
-					<Grid.Column computer="16">
+					<Grid.Column computer="10">
 						<Header size='medium'>Description About me</Header>
 						<Field
 							name="description"
@@ -283,8 +283,8 @@ export default class Profile extends Component {
 					contentSection = (
 						<div className="editContent">
 							<div>{ this.getPersonalInfoSection() }</div>
-							<div className="mt-10">{ descContent }</div>
-							<div className="mt-10">
+							<div className="mt-20">{ descContent }</div>
+							<div className="mt-20">
 								<Grid>
 									<Grid.Column computer="10">
 										<Header size='medium'>Change Password</Header>
@@ -392,8 +392,8 @@ export default class Profile extends Component {
 					    !passwordValidator(dataObj.password);
 				    const userVerificationData = await dispatch(verifyUser(user.email, dataObj.currentPassword));
 				    const isUserVerifiedFlag = validObjectWithParameterKeys(userVerificationData, ['user']) &&
-					    validObjectWithParameterKeys(userVerificationData.user, ['id']) &&
-					    userVerificationData.user.id === user.id;
+					    validObjectWithParameterKeys(userVerificationData.user, ['_id']) &&
+					    userVerificationData.user._id === user._id;
 				    if (!validNewPasswordFlag || !isUserVerifiedFlag) {
 				    	throw new SubmissionError({
 						    _error: !validNewPasswordFlag
@@ -458,10 +458,11 @@ export default class Profile extends Component {
 		        <span style={{ color: 'red' }}>{ loadErr || typeCastToString(error) }</span>
 	        </Message>
 				}
-
 				<Grid>
 					<Grid.Row>
-						<Grid.Column mobile={16} tablet={8} computer={12}>
+						<Grid.Column width={1}>
+						</Grid.Column>
+						<Grid.Column width={14}>
               { 
 								(isLoad || loading) && 
 								<Loader active inline='centered'>Loading...</Loader> 

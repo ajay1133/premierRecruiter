@@ -1,8 +1,15 @@
-'use strict';
-
-module.exports = (sequelize, DataTypes) => sequelize.define('contactUs', {
-  name: DataTypes.STRING,
-  email: DataTypes.STRING,
-  message: DataTypes.TEXT,
-  status: DataTypes.TINYINT
-}, {});
+module.exports = mongoose => {
+  const contactUs = mongoose.model(
+    'contactUs',
+    new mongoose.Schema({
+      name                  : { type: String },
+      email                 : { type: String },
+      message               : { type: String },
+      status                : { type: Boolean, defaultValue: 1 }
+    },
+    {
+      timestamps: true
+    })
+  );
+	return contactUs;
+};

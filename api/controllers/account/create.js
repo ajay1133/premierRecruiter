@@ -73,7 +73,7 @@ module.exports = {
   },
   handler: async (request, h) => {
     const { payload } = request;
-    const onError = (err) => {
+    const onError = err => {
       request.server.log(['error'], err);
       return boom.badRequest(err);
     };
@@ -83,7 +83,7 @@ module.exports = {
     // Return created user
     return await accountService
       .createUser(payload)
-      .then((data) => h.response(data))
+      .then(data => h.response(data))
       .catch(onError);
   }
 };
