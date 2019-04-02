@@ -3,7 +3,7 @@
 ### Technology used
 * NodeJs - Hapi framework with swagger documentation & auth plugin
 
-* React Js + Semnantic UI
+* React Js + Semantic UI
 
 * MongoDB
 
