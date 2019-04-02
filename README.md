@@ -1,5 +1,12 @@
 ## premierRecruiter
 
+### Technology used
+* NodeJs - Hapi framework with swagger documentation & auth plugin
+
+* React Js + Semnantic UI
+
+* MongoDB
+
 ### Local Environment Setup
 * Use Node Version: 10.x.x
 
