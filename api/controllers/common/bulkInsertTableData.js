@@ -1,7 +1,6 @@
 const joi = require('joi');
 const boom = require('boom');
 const commonService = require('../../services/commonService');
-
 module.exports = {
   plugins: {
     'hapi-swagger': {
@@ -26,11 +25,9 @@ module.exports = {
     },
     options: { abortEarly: false },
   },
-  
   handler: async (request, h) => {
     const { payload } = request;
     const { table, dataListOfObjects } = payload;
-    
     try {
       const data = await commonService.bulkInsertTableData(table, dataListOfObjects);
       return h.response(data);

@@ -253,28 +253,29 @@ export const updateAccount = accountDetails => async (dispatch, getState, api) =
 		// Get users object from reducer
 		let users = getState().get('account').get('items');
 		let selectedUser = {};
-		// Fetch user id & delete it from accountDetails object
-    const { id } = accountDetails;
-    delete accountDetails.id;
+		// Fetch user id & delete user id & updatedAt from accountDetails object
+    const { _id } = accountDetails;
+		delete accountDetails._id;
+		delete accountDetails.updatedAt;
 		// Based on updated status value, reassign reducer users account storage list
 		// If user is deleted, remove user
 		// Else overWrite user object with the accountDetails object
     if (!accountDetails.status) {
-    	users = users.filter(user => user._id !== id);
-	    selectedUser = strictValidArrayWithLength(users.filter(user => user._id === id)) &&
-		    users.filter(user => user._id === id)[0];
+    	users = users.filter(user => user._id !== _id);
+	    selectedUser = strictValidArrayWithLength(users.filter(user => user._id === _id)) &&
+		    users.filter(user => user._id === _id)[0];
     } else {
       users = users.map((user) => {
-        if (user._id === id) {
+        if (user._id === _id) {
           Object.assign(user, accountDetails);
         }
         return user;
       });
-      selectedUser = strictValidArrayWithLength(users.filter(user => user._id === id)) &&
-	      users.filter(user => user._id === id)[0];
+      selectedUser = strictValidArrayWithLength(users.filter(user => user._id === _id)) &&
+	      users.filter(user => user._id === _id)[0];
 		}
 		// Update user in database by calling put api
-    await api.put(`/account/${id}`, { data: accountDetails });
+    await api.put(`/account/${_id}`, { data: accountDetails });
 		await dispatch(loadAccounts());
     await dispatch({
 	    type: LOAD_ACCOUNTS,

@@ -115,14 +115,22 @@ export default class Accounts extends Component {
   
   typeAction = (type, row) => this.setState({ openConfirmBox: true, type, selectedUser: row });
   
-  account = async details => {
+  account = async userData => {
     const { dispatch } = this.props;
-    delete details.events;
-    Object.keys(details).filter(key => !details[key]).forEach(key => delete details[key]);
+    delete userData.events;
+    Object.keys(userData)
+          .filter(key => !userData[key])
+          .forEach(key => delete userData[key]);
 	  this.setState({ loading: true });
-	  const response = (details.id)
-		  ? await dispatch(updateAccount(details))
-		  : await dispatch(saveAccount(details));
+    let response = null;
+    if (userData._id) {
+      response = await dispatch(updateAccount(userData));
+    } else {
+      // Assign default values
+      userData.role = 2;
+      userData.status = 1;
+      response = await dispatch(saveAccount(userData));
+    }
 	  this.setState({ loading: false });
 	  return response;
   };

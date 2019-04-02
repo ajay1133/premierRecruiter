@@ -7,7 +7,7 @@ module.exports = [
     config: require('./getUsers'),
   },
   {
-    path: `${prefix}/{id?}`,
+    path: `${prefix}/{_id?}`,
     method: 'GET',
     config: require('./getUser'),
   },
@@ -27,7 +27,7 @@ module.exports = [
     config: require('./verifyInviteToken'),
   },
   {
-    path: `${prefix}/{id}`,
+    path: `${prefix}/{_id}`,
     method: 'PUT',
     config: require('./update'),
   },

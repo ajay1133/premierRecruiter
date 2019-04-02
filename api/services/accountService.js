@@ -58,8 +58,6 @@ exports.createUser = async userPayload => {
  */
 exports.getAllAccounts = async query => {
   let { page, limit, order } = query;
-  let conditionArr = [];
-  let finalInclude = [];
   page = page && page > 1 ? page : 1;
   let offset = page - 1;
   limit = (limit && parseInt(limit)) || 0;
@@ -67,17 +65,16 @@ exports.getAllAccounts = async query => {
   if (!order) {
     order = JSON.stringify([['_id', 'ASC']]);
   }
-	/*return await users.findAndCountAll({
-	  attributes: constants.DEFAULT_USER_ATTRIBUTES,
-    include: finalInclude,
-    where: {        
-      role: { $in: constants.DEFAULT_USER_ROLES },
-      $and: conditionArr
-    },
-    offset,
-    limit,
-    order: JSON.parse(order)
-  });*/
+  const whereObj = {        
+    role: { $in: constants.DEFAULT_USER_ROLES }
+  };
+	const list = await users.find(whereObj)
+  .skip(offset)
+  .limit(limit);
+  return {
+    rows: list,
+    count: await users.count(whereObj)
+  }
 };
 
 /**
@@ -108,35 +105,38 @@ exports.getUser = async userId => {
  * @param email
  */
 exports.getUserByEmail = async email => {
-	try {
-		let userDetails = await users.findOne({
-			email
-		});
-		if (userDetails) {
-			return userDetails.toJSON();
-		} else {
-			return Boom.internal('User Not Found');
-		}
-	} catch(err) {
-		return err;
-	}
+  if (email) {
+    try {
+      let userDetails = await users.findOne({
+        email
+      });
+      if (userDetails) {
+        return userDetails.toJSON();
+      } else {
+        return Boom.internal('User Not Found');
+      }
+    } catch(err) {
+      return err;
+    }
+  } else {
+    return Boom.internal('User Not Found');
+  }
 };
 
 /**
  * Update User
  * @param userPayload { email, password, firstName, lastName } etc
  */
- exports.updateUser = async (id, userPayload) => {
-   // assert(userPayload, i18n('services.accountService.missingUserPayload'));
+ exports.updateUser = async (_id, userPayload) => {
    const userData = Object.assign({}, userPayload);
    if (userPayload.password) {
      delete userData.password;
-     delete userData.id;
+     delete userData._id;
      const encryptedHash = await cryptoHelper.hashString(userPayload.password);
      userData.pwd = encryptedHash.hash || '';
      userData.pwdSalt = encryptedHash.salt || '';
    }
-   const updatedUser = await users.update(userData, { where: { id } });
+   const updatedUser = await users.update({ _id }, userData);
    return updatedUser;
  };
 
@@ -151,7 +151,7 @@ exports.getUserByEmail = async email => {
     let encryptedHash = await cryptoHelper.hashString(userPayload.password);
     userData.hash = encryptedHash.hash || '';
     userData.salt = encryptedHash.salt || '';
-    return await users.update(userData, { where:{ email: userPayload.email }});
+    return await users.update({ email: userPayload.email }, userData);
   } catch(err) {
     return err;
   }

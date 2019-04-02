@@ -18,7 +18,7 @@ module.exports = mongoose => {
       website               : { type: String },
       inviteToken           : { type: String },
       inviteStatus          : { type: Boolean, defaultValue: 0 },
-      status                : { type: Boolean, defaultValue: 1 },
+      status                : { type: Number, defaultValue: 1 },
       role                  : { type: Number }
     },
     { 

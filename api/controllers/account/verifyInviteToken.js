@@ -1,8 +1,8 @@
 const joi = require('joi');
 const boom = require('boom');
 const accountService = require('../../services/accountService');
+const commonService = require('../../services/commonService');
 const jwtHelper = require('../../helpers/jwtHelper');
-
 module.exports = {
   plugins: {
     'hapi-swagger': {
@@ -21,12 +21,12 @@ module.exports = {
   handler: async (request, h) => {
     const payload = request.payload;
     try {
-      let userdata = await jwtHelper.verify(payload.inviteToken);
+      let userData = await jwtHelper.verify(payload.inviteToken);
       // If thge decrytpted jwt object contains 'email' key it is a valid token if such an user exists
-      if (userdata.email) {
-        const res = await accountService.getUserByEmail( userdata.email );
-        if (res.inviteStatus === 0) {
-	        return h.response({ tokenValid: true });
+      if (userData.email) {
+        const res = await accountService.getUserByEmail(userData.email);
+        if (commonService.strictValidObjectWithKeys(res)) {
+	        return h.response({ tokenValid: !res.inviteStatus });
         }
         return h.response({ tokenValid: false });
       } else {
@@ -36,6 +36,7 @@ module.exports = {
       if (err && err.message === 'jwt expired') {
         return boom.badRequest("Link is expired");
       } else {
+        console.log(err);
 	      return boom.badRequest(JSON.stringify(err));
       }
     }

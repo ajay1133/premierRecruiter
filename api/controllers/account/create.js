@@ -68,6 +68,10 @@ module.exports = {
                  .valid([1,2,3])
                  .allow(null)
                  .description('1=Active, 2=Pending, 3=Denied'),
+      role: joi.number()
+               .valid([1,2,3,4])
+               .required()
+               .description('Title of User'),           
     },
     options: { abortEarly: false },
   },

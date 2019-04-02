@@ -40,7 +40,7 @@ internals.implementation = (server, options) => {
   return { authenticate: internals.authenticate };
 };
 
-internals.authCredentials = user => ({ id: user._id });
+internals.authCredentials = user => ({ _id: (user && user._id) || null });
 
 //Authenticate
 internals.authenticate = async (request, h) => {

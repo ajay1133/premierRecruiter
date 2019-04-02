@@ -5,7 +5,7 @@ module.exports = mongoose => {
       name                  : { type: String },
       email                 : { type: String },
       message               : { type: String },
-      status                : { type: Boolean, defaultValue: 1 }
+      status                : { type: Number, defaultValue: 1 }
     },
     {
       timestamps: true

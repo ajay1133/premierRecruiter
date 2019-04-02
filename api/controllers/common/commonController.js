@@ -2,16 +2,6 @@ const prefix = '/common';
 
 module.exports = [
 	{
-		path: `${prefix}/getTableData`,
-		method: 'GET',
-		config: require('./getTableData')
-	},
-	{
-		path: `${prefix}/relationalMappedData`,
-		method: 'GET',
-		config: require('./getRelationalMappedData')
-	},
-  {
 		path: `${prefix}/insert`,
 		method: 'POST',
 		config: require('./insertTableData'),

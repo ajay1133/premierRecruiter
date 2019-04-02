@@ -1,7 +1,6 @@
 const joi = require('joi');
 const boom = require('boom');
 const commonService = require('../../services/commonService');
-
 module.exports = {
   plugins: {
     'hapi-swagger': {
