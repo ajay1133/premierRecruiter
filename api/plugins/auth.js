@@ -66,12 +66,12 @@ internals.authenticate = async (request, h) => {
   const authHeader = request.raw.req.headers.authorization;
   if (authHeader) { 
     // JWT token based session
-     let userdata = await internals.jwtScheme(authHeader);
-     if (userdata) {
+    let userdata = await internals.jwtScheme(authHeader);
+    if (userdata) {
       return await authorize(userdata);
-     } else {
+    } else {
       return unauthorized(userdata);
-     }
+    }
   }
   else {  
     // Cookie based session

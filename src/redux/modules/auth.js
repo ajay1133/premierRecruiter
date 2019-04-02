@@ -56,8 +56,10 @@ export default function reducer(state = initialState, action) {
         .set('isLoad', false)
         .set(
           'user', 
-          validObjectWithParameterKeys(action.user, ['_id']) &&
-          action.user
+          (
+            validObjectWithParameterKeys(action.user, ['_id']) &&
+            action.user
+          ) || null  
         );
     case LOAD_FAIL:
       return state
@@ -104,8 +106,10 @@ export default function reducer(state = initialState, action) {
         .set('isLogin', false)
         .set(
           'user', 
-          validObjectWithParameterKeys(action.user, ['_id']) &&
-          action.user
+          (
+            validObjectWithParameterKeys(action.user, ['_id']) &&
+            action.user
+          ) || null
         );
     case LOGIN_FAIL:
       return state
@@ -129,8 +133,10 @@ export default function reducer(state = initialState, action) {
         .set('signUpErr', null)
         .set(
           'user', 
-          validObjectWithParameterKeys(action.user, ['_id']) &&
-          action.user
+          (
+            validObjectWithParameterKeys(action.user, ['_id']) &&
+            action.user
+          ) || null
         );
     case SIGNUP_FAIL:
       return state
